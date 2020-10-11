@@ -7,16 +7,16 @@ import (
 )
 
 type server struct {
-	storyArcs map[string]StoryArc
+	StoryArcs map[string]StoryArc
 	router *http.ServeMux
 	// represents the service and holds all of its dependencies
 	// the fields of the struct are shared dependencies
 }
 
 type StoryArc struct {
-	Title string
-	Story []string
-	Options []map[string]string
+	Title string `json:"title"`
+	Story []string `json:"story"`
+	Options []map[string]string `json:"options"`
 }
 
 func newServer() *server {
@@ -26,12 +26,12 @@ func newServer() *server {
 	return s
 }
 
-func PrepareServer() (*server, error) {
-	jsonBytes, err := ioutil.ReadFile("../gopher.json")
+func PrepareServer(filename *string) (*server, error) {
+	jsonBytes, err := ioutil.ReadFile(*filename)
 	var arcs map[string]StoryArc
 	err2 := json.Unmarshal(jsonBytes, &arcs)
 	s := newServer()
-	s.storyArcs = arcs
+	s.StoryArcs = arcs
 	if err2 != nil {
 		return s, err2
 	}

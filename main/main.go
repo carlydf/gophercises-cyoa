@@ -18,7 +18,7 @@ func main () {
 
 func run(filename *string) error {
 	server, err := cyoa.PrepareServer(filename)
-	fmt.Printf("%+v", server.StoryArcs)
+	fmt.Printf("%+v", server.Chapters)
 	http.ListenAndServe(":8080", server.HandleStart())
 	return err
 }

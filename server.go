@@ -7,16 +7,21 @@ import (
 )
 
 type server struct {
-	StoryArcs map[string]StoryArc
+	Chapters map[string]Chapter
 	router *http.ServeMux
 	// represents the service and holds all of its dependencies
 	// the fields of the struct are shared dependencies
 }
 
-type StoryArc struct {
+type Chapter struct {
 	Title string `json:"title"`
-	Story []string `json:"story"`
-	Options []map[string]string `json:"options"`
+	Paragraphs []string `json:"story"`
+	Options []Option `json:"options"`
+}
+
+type Option struct {
+	Text string `json:"text"`
+	NextChapter string `json:"arc"`
 }
 
 func newServer() *server {
@@ -28,10 +33,10 @@ func newServer() *server {
 
 func PrepareServer(filename *string) (*server, error) {
 	jsonBytes, err := ioutil.ReadFile(*filename)
-	var arcs map[string]StoryArc
-	err2 := json.Unmarshal(jsonBytes, &arcs)
+	var chapters map[string]Chapter
+	err2 := json.Unmarshal(jsonBytes, &chapters)
 	s := newServer()
-	s.StoryArcs = arcs
+	s.Chapters = chapters
 	if err2 != nil {
 		return s, err2
 	}

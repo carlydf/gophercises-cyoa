@@ -2,23 +2,23 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/gophercises/cyoa"
 	"log"
 	"net/http"
 )
 
 func main () {
+	port := flag.String("port", "3000", "port to start CYOA app on")
 	filename := flag.String("file", "../gopher.json", "JSON file with CYOA story")
-	err := run(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
+	flag.Parse()
+	run(filename, *port)
 }
 
-func run(filename *string) error {
-	server, err := cyoa.PrepareServer(filename)
-	fmt.Printf("%+v", server.Chapters)
-	http.ListenAndServe(":8080", server.HandleStart())
-	return err
+func run(filename *string, port string) error {
+	h, err := cyoa.PrepareHandler(filename)
+	if err != nil {
+		return err
+	}
+	log.Fatal(http.ListenAndServe(":" + port, h))
+	return nil
 }
